@@ -1,0 +1,44 @@
+- name: "Add private_key to ssh-agent (if necessary)"
+  include_tasks: "includes/private_key.yaml"
+  when: config_store_private_key is defined
+
+- name: "Add private_key_file to ssh-agent (if necessary)"
+  include_tasks: "includes/private_key_file.yaml"
+  when: config_store_private_key_file is defined
+
+- name: "Remove local repository (if necessary)"
+  file:
+    path: "{{ config_store_working_dir }}"
+    state: absent
+  run_once: yes
+  when: not config_store_keep_local_repo
+
+- name: "Clone existing git repository"
+  git:
+    repo: "{{ config_store_scm_url }}"
+    dest: "{{ config_store_working_dir }}"
+    remote: "{{ config_store_remote_name }}"
+    version: "{{ config_store_remote_branch }}"
+  run_once: yes
+  changed_when: False
+
+- name: "Configure local git repository"
+  git_config:
+    name: "{{ item.key }}"
+    repo: "{{ config_store_working_dir }}"
+    scope: local
+    value: "{{ item.value }}"
+  run_once: yes
+  changed_when: False
+  loop:
+    - { key: user.name, value: "{{ config_store_committer_name }}" }
+    - { key: user.email, value: "{{ config_store_committer_email }}" }
+    - { key: branch.autosetupmerge, value: "always" }
+    - { key: push.default, value: "current" }
+
+- name: "Ensure branch exists"
+  git_checkout:
+    repo: "{{ config_store_working_dir }}"
+    remote: "{{ config_store_remote_name }}"
+    branch: "{{ config_store_version }}"
+  run_once: yes

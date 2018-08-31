@@ -1,0 +1,31 @@
+- name: "commit local changes"
+  git_commit:
+    repo: "{{ config_store_working_dir }}"
+  run_once: yes
+
+- name: "push local to remote"
+  git_push:
+    repo: "{{ config_store_working_dir }}"
+    remote: "{{ config_store_remote_name }}"
+    branch: "{{ config_store_version }}"
+  run_once: yes
+
+- name: "checkout remote branch"
+  git_checkout:
+    repo: "{{ config_store_working_dir }}"
+    remote: "{{ config_store_remote_name }}"
+    branch: "{{ config_store_remote_branch }}"
+  run_once: yes
+
+- name: "merge {{ config_store_version }} in master"
+  shell: "git merge --no-ff {{ config_store_version | quote }}"
+  args:
+    chdir: "{{ config_store_working_dir }}"
+  run_once: yes
+
+- name: "push commits to remote branch"
+  git_push:
+    repo: "{{ config_store_working_dir }}"
+    remote: "{{ config_store_remote_name }}"
+    branch: "{{ config_store_remote_branch }}"
+  run_once: yes

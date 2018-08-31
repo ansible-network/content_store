@@ -1,0 +1,22 @@
+---
+- name: "Add config_store_private_key to ssh-agent"
+  block:
+    - name: "ensure state of config_store_secure_dir"
+      file:
+        path: "{{ config_store_secure_dir }}"
+        state: directory
+
+    - name: "create file with key"
+      copy:
+        content: "{{ config_store_scm_private_key }}"
+        dest: "{{ config_store_secure_dir }}/.scm_private_key"
+        mode: 0600
+
+    - name: "ssh-add file containing the key"
+      shell: "ssh-add {{ config_store_secure_dir }}/.scm_private_key"
+
+  always:
+    - name: "remove file with the key"
+      file:
+        path: "{{ config_store_secure_dir }}/.scm_private_key"
+        state: absent

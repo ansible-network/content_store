@@ -1,17 +1,12 @@
 ---
 # handlers file for ansible-network.config_store
 #
-- name: commit local changes
-  git_commit:
-    repo: "{{ config_store_working_dir }}"
+- name: "trigger git_sync"
+  include_tasks: "includes/git_flow.yaml"
+  listen: git_sync
   run_once: yes
 
-- name: push local to remote
-  git_push:
-    repo: "{{ config_store_working_dir }}"
-  run_once: yes
-
-- name: remove local repo
+- name: "remove local repo"
   file:
     path: "{{ config_store_working_dir }}"
     state: absent

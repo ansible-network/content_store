@@ -1,0 +1,116 @@
+---
+argument_spec:
+  config_store_scm_type:
+    default: git
+    choices:
+      - git
+    description:
+      - SCM Type (git).
+
+  config_store_scm_url:
+    required: true
+    description:
+      - SCM url.
+
+  config_store_scm_password:
+    required: false
+    secure: true
+    default: None
+    description:
+      - SCM Password
+
+  config_store_scm_private_key:
+    required: false
+    secure: true
+    required: false
+    description:
+      - Specify the private key to use.
+
+  config_store_scm_private_key_file:
+    required: false
+    description:
+      - Specify the file containing the private key.
+
+  config_store_yang_specs:
+    required: true
+    type: list
+    description:
+      - "List of yang specs to store."
+      - "Follow below a list of openconfig specs:
+        - openconfig-acl
+        - openconfig-bfd
+        - openconfig-bgp
+        - openconfig-interfaces
+        - openconfig-isis
+        - openconfig-lacp
+        - openconfig-lldp
+        - openconfig-local-routing
+        - openconfig-mpls
+        - openconfig-multicast
+        - openconfig-ospf
+        - openconfig-policy
+        - openconfig-rib
+        - openconfig-stp
+        - openconfig-system
+        - openconfig-vlan"
+      - "The entire list of openconfig specs is available at:
+        https://github.com/openconfig/public/tree/master/release/models"
+      - "Consult the vendor documentation for your device to validate the specs supported."
+
+  config_store_working_dir:
+    default: "~/.ansible/tmp/config_store"
+    required: false
+    description:
+      - Path to store repository content.
+
+  config_store_secure_dir:
+    default: "~/.ansible/secure"
+    required: false
+    description:
+      - Secure path to temporarily store credentials when adding to ssh-agent.
+
+  config_store_remote_name:
+    default: "origin"
+    required: false
+    description:
+      - Name of the remote.
+
+  config_store_version:
+    default: "snapshot"
+    required: false
+    description:
+      - What branch to checkout. This branch is created in case of absence.
+
+  config_store_keep_local_repo:
+    required: false
+    default: false
+    description:
+      - Boolean to define if the repository content should be kept or not.
+
+  config_store_remote_branch:
+    default: "master"
+    required: false
+    description:
+      - This can be the the literal string HEAD, a branch name, a tag name.
+        It can also be a SHA-1 hash, in which case refspec needs to be
+        specified if the given revision is not already available.
+      - Consider this the branch for reference when creating snapshots.
+        The task will fail if this branch doesn't exists.
+
+  config_store_committer_name:
+    default: "ansible"
+    required: false
+    description:
+      - The name of the commiter that appears in the repository.
+
+  config_store_committer_email:
+    default: "ansible@localhost"
+    required: false
+    description:
+      - The email of the commiter that appears in the repository.
+
+mutually_exclusive:
+  - ['config_store_remote_private_key_file', 'config_store_remote_private_key']
+
+required_one_of:
+  - ['config_store_scm_password', 'config_store_remote_private_key_file', 'config_store_remote_private_key']

@@ -1,0 +1,18 @@
+---
+- name: "Stat config_store_scm_private_key_file"
+  stat:
+    path: "{{ config_store_scm_private_key_file }}"
+  register: exists_private_key_file
+
+- name: "Validate file config_store_scm_private_key_file"
+  assert:
+    that:
+      - exists_private_key_file.isreg is defined
+      - exists_private_key_file.isreg
+      - exists_private_key_file.readable is defined
+      - exists_private_key_file.readable
+    fail_msg: "File doesn't exists or we are unable to read."
+    success_msg: "File exists and is readable."
+
+- name: "ssh-add file containing the key"
+  shell: "ssh-add {{ config_store_scm_private_key_file }}"

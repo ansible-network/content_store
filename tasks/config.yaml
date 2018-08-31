@@ -1,0 +1,36 @@
+---
+# tasks file for ansible-network.config_store
+#
+- name: validate role spec
+  validate_role_spec:
+    spec: config_spec.yaml
+
+- name: "invoke network provider get_config function"
+  include_role:
+    name: "{{ ansible_network_provider }}"
+    tasks_from: get_config
+
+- name: "validate configuration exists"
+  fail:
+    msg: "missing required hostvar: configuration"
+  when: configuration is not defined
+
+- name: "Ensure git_datastore"
+  include_tasks: "includes/git_datastore.yaml"
+
+- name: "Ensure folder structure"
+  file:
+    path: "{{ config_store_working_dir }}/{{ inventory_hostname_short }}/config"
+    state: directory
+
+- name: "copy content into local git repository"
+  copy:
+    content: "{{ configuration }}"
+    dest: "{{ config_store_working_dir }}/{{ inventory_hostname_short }}/config/running.cfg"
+  notify: git_sync
+
+- name: "trigger local repository remove handler"
+  command: echo true
+  run_once: yes
+  notify: remove local repo
+  when: not config_store_keep_local_repo

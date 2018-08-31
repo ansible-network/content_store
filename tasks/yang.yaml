@@ -1,0 +1,30 @@
+---
+- name: validate role spec
+  validate_role_spec:
+    spec: yan_spec.yaml
+
+- name: "Ensure git_datastore"
+  include_tasks: "includes/git_datastore.yaml"
+
+- name: "Ensure folder structure"
+  file:
+    path: "{{ config_store_working_dir }}/{{ inventory_hostname_short }}"
+    state: directory
+
+- name: "invoke network yang provider to save specs into local git repository"
+  include_role:
+    name: "{{ ansible_network_yang_provider }}"
+    tasks_from: spec
+  notify: git_sync
+  loop: "{{ config_store_yang_specs }}"
+  loop_control:
+    loop_var: yang_model_name
+  vars:
+    yang_dir: "{{ config_store_working_dir }}/{{ inventory_hostname_short }}/yang"
+    yang_spec_dir: "{{ yang_dir }}/specs"
+
+- name: "trigger local repository remove handler"
+  command: echo true
+  run_once: yes
+  notify: remove local repo
+  when: not config_store_keep_local_repo

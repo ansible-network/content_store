@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ansible Network Community (ansible-network)
-  description: Ansible role for managing network device configuration stores
+  description: Ansible role for managing network device configuration/content stores
   company: Ansible
 
   license: GPLv3
