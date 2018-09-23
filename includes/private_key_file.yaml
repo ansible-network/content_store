@@ -7,10 +7,10 @@
 - name: "Validate file config_store_scm_private_key_file"
   assert:
     that:
-      - exists_private_key_file.isreg is defined
-      - exists_private_key_file.isreg
-      - exists_private_key_file.readable is defined
-      - exists_private_key_file.readable
+      - exists_private_key_file.stat.isreg is defined
+      - exists_private_key_file.stat.isreg
+      - exists_private_key_file.stat.readable is defined
+      - exists_private_key_file.stat.readable
     fail_msg: "File doesn't exists or we are unable to read."
     success_msg: "File exists and is readable."
 
