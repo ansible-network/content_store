@@ -1,10 +1,10 @@
 - name: "Add private_key to ssh-agent (if necessary)"
   include_tasks: "includes/private_key.yaml"
-  when: config_store_private_key is defined
+  when: config_store_scm_private_key is defined
 
 - name: "Add private_key_file to ssh-agent (if necessary)"
   include_tasks: "includes/private_key_file.yaml"
-  when: config_store_private_key_file is defined
+  when: config_store_scm_private_key_file is defined
 
 - name: "Remove local repository (if necessary)"
   file:
