@@ -15,4 +15,4 @@
     success_msg: "File exists and is readable."
 
 - name: "ssh-add file containing the key"
-  shell: "ssh-add {{ config_store_scm_private_key_file }}"
+  shell: "eval `ssh-agent -s` ; ssh-add {{ config_store_scm_private_key_file }}"
