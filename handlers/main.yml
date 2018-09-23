@@ -2,7 +2,7 @@
 # handlers file for ansible-network.config_store
 #
 - name: "trigger git_sync"
-  include_tasks: "includes/git_flow.yaml"
+  include_tasks: "includes/git_sync.yaml"
   listen: git_sync
   run_once: yes
 
