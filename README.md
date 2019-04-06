@@ -10,7 +10,7 @@ This role is network platform agnostic.
 
 ## Functions
 
-This section provides a list of the available functions that are including in this role.
+This section provides a list of the available functions that are included in this role.
 Any of the provided functions can be implemented in Ansible playbooks to perform content oriented activities on network devices.
 
 * `config` to store content of running/active configuration ( Details: [source](https://github.com/ansible-network/config_store/blob/devel/tasks/config.yaml), [docs](https://github.com/ansible-network/config_store/blob/devel/docs/tasks/config.md)).
